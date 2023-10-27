@@ -55,7 +55,7 @@ class GoogleAuth {
      *
      * @return string Access token
      */
-    public function getAccessToken($code){
+    public function getAccessToken($code=null){
         $tokenRequestData = [
             'code' => $code,//
             'client_id' => $this->clientID,
