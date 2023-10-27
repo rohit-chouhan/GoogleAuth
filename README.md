@@ -18,6 +18,7 @@ Table of Contents
     *   [Setting OAuth Scopes](#setting-oauth-scopes)
     *   [Getting OAuth Login URL](#getting-oauth-login-url)
     *   [Getting Access Token](#getting-access-token)
+    *   [Refresh Access Token](#refresh-access-token)
     *   [Resetting Access Token](#resetting-access-token)
     *   [Getting User Information](#getting-user-information)
 
@@ -69,11 +70,18 @@ $authURL = $googleAuth->getLoginURI();
 
 ### Getting Access Token
 This function returns the access token received after user login for an access token, you don't need to refresh your token, this function can refresh access token every time, so user don't need to login everytime.
-
+`$code` parameter is only required, when user authorize first time.
 ```php
 $code = $_GET['code']; // Authorization code received after user login
 $accessToken = $googleAuth->getAccessToken($code);
 ```  
+### Refresh Access Token
+This function help you to refresh your access token, when your original token is expired.
+This function is optinal to use, because its already implemente with `getAccessToken()`, if `getAccessToken` not able to refresh token, then use this function.
+
+```php
+$googleAuth->refreshToken("YOUR_REFRESH_TOKEN");
+```
 
 ### Resetting Access Token
 This function resets the stored access token. It can be used to perform a debug login.
