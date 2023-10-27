@@ -93,6 +93,38 @@ class GoogleAuth {
         
     }
 
+     /**
+     * Refresh your access token, when expired
+     * 
+     * @param string $refreshToken Your refresh_token
+     * 
+     * @return string New Access token
+     */
+    public function refreshToken($refreshToken){
+        $tokenRequestData = [
+            'client_id' => $this->clientID,
+            'client_secret' => $this->clientSecret,
+            'grant_type' => 'refresh_token',
+            'refresh_token'=> $refreshToken
+        ];
+
+        $ch = curl_init($this->tokenEndpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($tokenRequestData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded'
+        ]);
+        
+        $tokenResponse = curl_exec($ch);
+        curl_close($ch);
+        
+        $tokenData = json_decode($tokenResponse, true);
+        return $tokenData['access_token'] ?? '';
+        
+    }
       /**
      * Reset the stored access token, or debug login
      */
