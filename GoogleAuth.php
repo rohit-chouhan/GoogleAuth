@@ -68,7 +68,7 @@ class GoogleAuth {
             unset($tokenRequestData['code']);
             unset($tokenRequestData['redirect_uri']);
             $tokenRequestData['grant_type']='refresh_token';
-            $tokenRequestData['refresh_token']=$_SESSION['recheck_google_auth_token'];
+            $tokenRequestData['refresh_token']=$_SESSION['refresh_google_auth_token'];
         }
         
         $ch = curl_init($this->tokenEndpoint);
@@ -86,9 +86,8 @@ class GoogleAuth {
         
         $tokenData = json_decode($tokenResponse, true);
 
-        
-        if(empty($_SESSION['recheck_google_auth_token'])){
-            $_SESSION['recheck_google_auth_token'] = $tokenData['access_token'];
+        if(empty($_SESSION['refresh_google_auth_token'])){
+            $_SESSION['refresh_google_auth_token'] = $tokenData['refresh_token'];
         }
         return $tokenData['access_token'];
         
@@ -98,7 +97,7 @@ class GoogleAuth {
      * Reset the stored access token, or debug login
      */
     public function resetAccessToken(){
-        unset($_SESSION['recheck_google_auth_token']);
+        unset($_SESSION['refresh_google_auth_token']);
     }
 
        /**
@@ -110,7 +109,7 @@ class GoogleAuth {
      * @return object User information
      */
     public function getUserInfo(){
-        $token = $_SESSION['recheck_google_auth_token'];
+        $token = $_SESSION['refresh_google_auth_token'];
         $url = "https://www.googleapis.com/oauth2/v3/userinfo?alt=json&access_token=".$token;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
